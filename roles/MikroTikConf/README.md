@@ -1,4 +1,4 @@
-Role Name
+MikroTikConf role
 =========
 
 Role for configuring MikroTik RouterOS via ssh
