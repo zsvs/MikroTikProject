@@ -1,0 +1,5 @@
+- hosts: routers
+  connection: network_cli
+  gather_facts: false
+  roles:
+    - MikroTikConf
