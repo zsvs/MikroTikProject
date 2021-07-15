@@ -1,5 +1,5 @@
 ---
-
+#  Kernel MikroTik project
 - name: Display resource statistics (routeros)
   community.network.routeros_command:
     commands: /system resource print
@@ -8,7 +8,7 @@
 - name: Print res
   debug: var=routeros_resources.stdout_lines
 
-- name: Firewall rules
+- name: Firewall rules 
   community.network.routeros_command:
     commands: /ip firewall filter add chain=input protocol=icmp action=accept comment="Allow ICMP" 
 
