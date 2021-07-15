@@ -1,24 +1,108 @@
 ---
 #  Kernel MikroTik project
+
 - name: Display resource statistics (routeros)
-  community.network.routeros_command:
+  routeros_command:
     commands: /system resource print
   register: routeros_resources
+  tags:
+    - Basic_conf
+    - Common
 
 - name: Print res
   debug: var=routeros_resources.stdout_lines
-
-- name: Firewall rules 
-  community.network.routeros_command:
-    commands: /ip firewall filter add chain=input protocol=icmp action=accept comment="Allow ICMP" 
+  tags:
+    - Basic_conf
+    - Common
 
 - name: system command
   routeros_command:
     commands: /system routerboard print
   register: system_print
-  
-- name: Print firewall
-  debug: var=ip_firewall_rules.stdout_lines
+  tags:
+    - Basic_conf
+    - Common
 
 - name: Print system
   debug: var=system_print.stdout_lines
+  tags:
+    - Basic_conf
+    - Common
+
+- name: Basic NAT config
+  routeros_command:
+    commands: /ip firewall nat add chain=srcnat action=masquerade out-interface={{ Internetfacing_interface }}
+  tags:
+    - Basic_conf
+    - NAT
+
+- name: IP pool config
+  routeros_command:
+    commands: /ip pool add name={{ IP_Pool_name }} ranges={{ IP_Pool_ranges_begin }}-{{ IP_Pool_ranges_end }}
+  tags: 
+    - Basic_conf
+    - DHCP
+
+- name: DHCP-server add pool
+  routeros_command:
+    commands: 
+      - /ip dhcp-server add address-pool={{ IP_Pool_name }} disabled=no interface={{ Bridge_interface_name }}
+  tags: 
+    - Basic_conf
+    - DHCP
+
+- name: DHCP-server add network
+  routeros_command:
+    commands: 
+      - /ip dhcp-server network add address={{ DHCP_Network_address }} comment=Ansible_configs gateway={{ Default_gateway }}
+  tags: 
+    - Basic_conf
+    - DHCP
+
+- name: Service ports disable - api
+  routeros_command:
+    commands: 
+      - /ip service disable api 
+  tags:
+    - Basic_conf
+    - Service_disable
+
+- name: Service ports disable - api-ssl
+  routeros_command:
+    commands: 
+      - /ip service disable api-ssl 
+  tags:
+    - Basic_conf
+    - Service_disable
+
+- name: Service ports disable - ftp
+  routeros_command:
+    commands: 
+      - /ip service disable ftp 
+  tags:
+    - Basic_conf
+    - Service_disable
+
+- name: Service ports disable - www-ssl
+  routeros_command:
+    commands: 
+      - /ip service disable www-ssl
+  tags:
+    - Basic_conf
+    - Service_disable
+
+- name: Service ports disable - telnet
+  routeros_command:
+    commands: 
+      - /ip service disable telnet
+  tags:
+    - Basic_conf
+    - Service_disable
+
+- name: Firewall - Allow ICMP rule
+  routeros_command:
+    commands: /ip firewall filter add chain=input protocol=icmp action=accept comment="Allow ICMP" 
+  tags:
+    - Basic_conf
+    - Firewall_rules
+    - Allow_ICMP

@@ -1,2 +1,9 @@
 ---
 # defaults file for MikroTikConf
+Internetfacing_interface: "ether1-gateway"
+Bridge_interface_name: "bridge-local"
+DHCP_Network_address: "192.168.88.0/24"
+Default_gateway: "192.168.88.1"
+IP_Pool_name: "Ansible_pool"
+IP_Pool_ranges_begin: "192.168.88.2"
+IP_Pool_ranges_end: "192.168.88.100"
